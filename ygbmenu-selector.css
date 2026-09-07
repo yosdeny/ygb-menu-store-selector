@@ -1,0 +1,84 @@
+/* === YGBMENU SELECTOR - VERSIÓN CON ICONO DENTRO === */
+
+/* Contenedor principal - AHORA SIN FLEX */
+.ygbmenu-unique-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+/* Selector CON DOS ICONOS DENTRO */
+.ygbmenu-unique-select {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    padding: 2px 40px 2px 35px !important;
+    width: 100% !important;
+    color: #E26143 !important;
+    border: 2px solid #E26143 !important;
+    border-radius: 8px !important;
+    background-color: #fff !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    
+    background-position: left 10px center, right 10px center !important;
+    background-size: 16px, 20px !important;
+    background-repeat: no-repeat, no-repeat !important;
+    
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    cursor: pointer !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif !important;
+    box-sizing: border-box !important;
+    height: auto !important;
+    min-height: 40px !important;
+    vertical-align: middle !important;
+}
+
+/* Estados */
+.ygbmenu-unique-select:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(226,97,67,0.4) !important;
+    border-color: #D14F32 !important;
+}
+
+.ygbmenu-unique-select:hover {
+    border-color: #D14F32 !important;
+    box-shadow: 0 0 0 2px rgba(209,79,50,0.3) !important;
+}
+
+.ygbmenu-unique-select:disabled,
+.ygbmenu-unique-select.loading-state {
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
+    background-color: #f9f9f9 !important;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .ygbmenu-unique-select {
+        font-size: 14px !important;
+        padding: 2px 40px 2px 32px !important;
+        min-height: 36px !important;
+        background-position: left 8px center, right 8px center !important;
+        background-size: 14px, 18px !important;
+    }
+}
+
+/* Accesibilidad */
+.ygbmenu-unique-select:focus-visible {
+    outline: 2px solid #E26143 !important;
+    outline-offset: 2px !important;
+}
+
+.ygbmenu-unique-select:focus:not(:focus-visible) {
+    outline: none !important;
+}
+
+/* Correcciones específicas para Astra */
+.ast-container .ygbmenu-unique-container,
+.ast-page-builder-template .ygbmenu-unique-container,
+.ast-separate-container .ygbmenu-unique-container {
+    margin: 15px 0 !important;
+}

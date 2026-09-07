@@ -1,0 +1,33 @@
+# Copyright (C) 2024 YGB
+msgid ""
+msgstr ""
+"Project-Id-Version: YGB Menu Store Selector 1.1.7\n"
+"POT-Creation-Date: 2024-01-01 10:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ygbmenu-store-selector.php:63
+msgid "Selecciona una tienda"
+msgstr ""
+
+#: ygbmenu-store-selector.php:68
+msgid "Elige una tienda"
+msgstr ""
+
+#: ygbmenu-store-selector.php:104
+msgid "No hay opciones para configurar este widget."
+msgstr ""
+
+#: ygbmenu-store-selector.php:94
+msgid "YGBMenu Store Selector"
+msgstr ""
+
+#: ygbmenu-store-selector.php:95
+msgid "Selector de tiendas para YGBMenu Mercado"
+msgstr ""
