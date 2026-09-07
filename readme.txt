@@ -1,11 +1,12 @@
 === YGBMenu Store Selector ===
 Contributors: YGB
 Tags: selector, dropdown, redirect, cookies, store selector, menu
-Requires at least: 6.9+
-Tested up to: 7.0+
+Requires at least: 7.0
+Tested up to: 7.1
 Stable tag: 1.2.3
-Requires PHP: 8.0+
-License: GPL v2 or later
+Requires PHP: 8.0
+Tested PHP: 8.2
+License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Un selector desplegable de URLs para redirección con persistencia mediante cookies.
