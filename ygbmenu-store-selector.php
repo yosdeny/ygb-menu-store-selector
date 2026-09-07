@@ -1,14 +1,16 @@
 <?php
 /**
  * Plugin Name: YGB Menu Store Selector
- * Plugin URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Plugin URI: https://github.com/yosdeny
  * Description: Selector desplegable de url para redirección con persistencia mediante cookies. Shortcode: [ygbmenu_selector]. Depende del Plugin (YGB Store Selector) para crear y gestionar las URLs.
  * Version: 1.2.3
- * Requires at least: 6.9
+ * Requires at least: 7.0
+ * Tested up to: 7.1
  * Requires PHP: 8.0
+ * Tested PHP: 8.2
  * Author: YGB
- * Author URI: https://www.gnu.org/licenses/gpl-2.0.html
- * License: GPL v2 or later
+ * Author URI: https://github.com/yosdeny
+ * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: ygbmenu-store-selector
  * Domain Path: /languages
