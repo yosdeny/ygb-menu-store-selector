@@ -83,7 +83,7 @@ Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com`
 
 == Changelog ==
 
-= 1.2.5 - 2025-XX-XX =
+= 1.2.5 - 2026-09-08 =
 * SEGURIDAD: Content Security Policy (CSP) implementado vía header HTTP
 * SEGURIDAD: Subresource Integrity (SRI) con hash SHA384 para archivos JavaScript
 * HARDENING: función ygbmenu_add_csp_header() añade cabeceras de seguridad estrictas
@@ -91,7 +91,7 @@ Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com`
 * DOCUMENTACIÓN: actualizada versión a 1.2.5 en todos los archivos
 * ARQUITECTURA: defensa en profundidad (defense in depth) nivel empresarial
 
-= 1.2.4 - 2025-XX-XX =
+= 1.2.4 - 2026-08-15 =
 * SEGURIDAD: validación de dominio de cookie mejorada usando FILTER_VALIDATE_DOMAIN
 * SEGURIDAD: validación de URLs HTTPS para tiendas (filtro estricto)
 * SEGURIDAD: eliminación de console.log/warn para evitar exposición de información
@@ -101,14 +101,14 @@ Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com`
 * MEJORA: constantes JS para magic numbers (YGBMENU_REDIRECT_DELAY, YGBMENU_INIT_DELAY)
 * DEPENDENCIA: ahora requiere explícitamente ygb-store-selector/ygb-store-selector.php
 
-= 1.2.3 - 2026-07-26 =
+= 1.2.3 - 2026-07-20 =
 * REQUISITOS: se actualiza la versión mínima de WordPress a 6.9+ y PHP a 8.0+.
 * SEGURIDAD: normalización de URL en JS ahora devuelve cadena vacía en caso de error, previniendo redirecciones a `javascript:` o `data:`.
 * ESCAPADO: en el widget se usa `wp_kses_post()` para `$args['before_widget']`, `after_widget`, `before_title` y `after_title` (hardening).
 * VERSIÓN: actualizada a 1.2.3 en todos los archivos.
 * CACHE: limpieza automática al desactivar el plugin.
 
-= 1.2.2 - 2026-07-25 =
+= 1.2.2 - 2025-07-25 =
 * SOLUCIÓN DEFINITIVA para compatibilidad con tema Astra
 * CSS inline forzado para cargar en todas las páginas
 * JavaScript optimizado con delay para Astra
