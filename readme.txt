@@ -3,7 +3,7 @@ Contributors: YGB
 Tags: selector, dropdown, redirect, cookies, store selector, menu
 Requires at least: 7.0
 Tested up to: 7.1
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 Requires PHP: 8.0
 Tested PHP: 8.2
 License: GPLv2 or later
@@ -82,6 +82,16 @@ Ve al panel de administración del plugin (YGB Menu) y usa los selectores de col
 Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com` (con punto al inicio).
 
 == Changelog ==
+
+= 1.2.4 - 2025-XX-XX =
+* SEGURIDAD: validación de dominio de cookie mejorada usando FILTER_VALIDATE_DOMAIN
+* SEGURIDAD: validación de URLs HTTPS para tiendas (filtro estricto)
+* SEGURIDAD: eliminación de console.log/warn para evitar exposición de información
+* MEJORA: hook de activación añadido para inicializar opciones por defecto
+* MEJORA: archivo uninstall.php creado para limpieza completa al eliminar
+* MEJORA: declaración "Requires Plugins" añadida en el header
+* MEJORA: constantes JS para magic numbers (YGBMENU_REDIRECT_DELAY, YGBMENU_INIT_DELAY)
+* DEPENDENCIA: ahora requiere explícitamente ygb-store-selector/ygb-store-selector.php
 
 = 1.2.3 - 2026-07-26 =
 * REQUISITOS: se actualiza la versión mínima de WordPress a 6.9+ y PHP a 8.0+.

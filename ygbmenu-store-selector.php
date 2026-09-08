@@ -3,11 +3,12 @@
  * Plugin Name: YGB Menu Store Selector
  * Plugin URI: https://github.com/yosdeny
  * Description: Selector desplegable de url para redirección con persistencia mediante cookies. Shortcode: [ygbmenu_selector]. Depende del Plugin (YGB Store Selector) para crear y gestionar las URLs.
- * Version: 1.2.3
+ * Version: 1.2.4
  * Requires at least: 7.0
  * Tested up to: 7.1
  * Requires PHP: 8.0
  * Tested PHP: 8.2
+ * Requires Plugins: ygb-store-selector/ygb-store-selector.php
  * Author: YGB
  * Author URI: https://github.com/yosdeny
  * License: GPLv2 or later
@@ -19,7 +20,7 @@
 if (!defined('ABSPATH')) exit;
 
 // ==================== DEFINICIONES ====================
-define('YGBMENU_VERSION', '1.2.3');
+define('YGBMENU_VERSION', '1.2.4');
 define('YGBMENU_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('YGBMENU_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('YGBMENU_PLUGIN_NAME', 'YGB Menu Store Selector');
@@ -63,9 +64,14 @@ function ygbmenu_get_stores_safe() {
         $tiendas = array();
     }
     
-    // Filtrar entradas válidas
+    // Filtrar entradas válidas con validación de URL HTTPS
     $tiendas = array_filter($tiendas, function($tienda) {
-        return is_array($tienda) && !empty($tienda['url']) && !empty($tienda['nombre']);
+        if (!is_array($tienda) || empty($tienda['url']) || empty($tienda['nombre'])) {
+            return false;
+        }
+        // Validar que la URL sea absoluta y preferiblemente HTTPS
+        $url = filter_var($tienda['url'], FILTER_VALIDATE_URL);
+        return $url && strpos($url, 'https://') === 0;
     });
     
     return $tiendas;
@@ -251,8 +257,8 @@ function ygbmenu_save_settings() {
     
     $cookie_domain = isset($_POST['cookie_domain']) ? sanitize_text_field($_POST['cookie_domain']) : '';
     if (!empty($cookie_domain)) {
-        if (!preg_match('/^\.[a-z0-9.-]+$/i', $cookie_domain) && 
-            !preg_match('/^[a-z0-9.-]+\.[a-z]{2,}$/i', $cookie_domain)) {
+        // Validación mejorada de dominio usando FILTER_VALIDATE_DOMAIN
+        if (!filter_var($cookie_domain, FILTER_VALIDATE_DOMAIN)) {
             $cookie_domain = '';
         }
     }
@@ -644,3 +650,38 @@ function ygbmenu_deactivate_cleanup() {
     ygbmenu_clear_dynamic_css_cache();
 }
 register_deactivation_hook(__FILE__, 'ygbmenu_deactivate_cleanup');
+
+/**
+ * Hook de activación - Inicializar opciones por defecto
+ */
+function ygbmenu_activate_plugin() {
+    // Inicializar opciones por defecto si no existen
+    if (get_option('ygbmenu_cookie_days') === false) {
+        add_option('ygbmenu_cookie_days', 30);
+    }
+    if (get_option('ygbmenu_cookie_domain') === false) {
+        add_option('ygbmenu_cookie_domain', '');
+    }
+    if (get_option('ygbmenu_color_primary') === false) {
+        add_option('ygbmenu_color_primary', '#E26143');
+    }
+    if (get_option('ygbmenu_color_hover') === false) {
+        add_option('ygbmenu_color_hover', '#D14F32');
+    }
+    if (get_option('ygbmenu_color_text') === false) {
+        add_option('ygbmenu_color_text', '#E26143');
+    }
+    if (get_option('ygbmenu_color_background') === false) {
+        add_option('ygbmenu_color_background', '#ffffff');
+    }
+    if (get_option('ygbmenu_color_border') === false) {
+        add_option('ygbmenu_color_border', '#E26143');
+    }
+    if (get_option('ygbmenu_color_spinner_primary') === false) {
+        add_option('ygbmenu_color_spinner_primary', '#E26143');
+    }
+    if (get_option('ygbmenu_color_spinner_secondary') === false) {
+        add_option('ygbmenu_color_spinner_secondary', '#00A32E');
+    }
+}
+register_activation_hook(__FILE__, 'ygbmenu_activate_plugin');
