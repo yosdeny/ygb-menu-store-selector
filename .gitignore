@@ -1,10 +1,6 @@
-```
-# Logs and temp files
 *.log
 *.tmp
 *.swp
-
-# Environment
 .env
 .env.local
 .env.*
@@ -12,40 +8,17 @@
 # Editors
 .vscode/
 .idea/
-
-# Dependencies
 node_modules/
 venv/
 .venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
 dist/
 build/
 target/
 .gradle/
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Compiled files
-*.pyc
-*.class
-*.o
-*.exe
-*.dll
-*.so
-*.a
-*.obj
-*.out
-
-# Coverage
+.mypy_cache/
+.pytest_cache/
 coverage/
 htmlcov/
-.coverage
-
-# Compressed files
 *.zip
 *.gz
 *.tar
