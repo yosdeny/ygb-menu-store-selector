@@ -3,11 +3,9 @@
 *.swp
 .env
 .env.local
-.env.
-.pyc
-__pycache__/
-.DS_Store
-Thumbs.db
+.env.*
+
+# Editors
 .vscode/
 .idea/
 node_modules/
@@ -43,3 +41,4 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+```
