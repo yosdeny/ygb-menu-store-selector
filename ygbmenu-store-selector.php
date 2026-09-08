@@ -3,7 +3,7 @@
  * Plugin Name: YGB Menu Store Selector
  * Plugin URI: https://github.com/yosdeny
  * Description: Selector desplegable de url para redirección con persistencia mediante cookies. Shortcode: [ygbmenu_selector]. Depende del Plugin (YGB Store Selector) para crear y gestionar las URLs.
- * Version: 1.2.4
+ * Version: 1.2.5
  * Requires at least: 7.0
  * Tested up to: 7.1
  * Requires PHP: 8.0
@@ -20,10 +20,11 @@
 if (!defined('ABSPATH')) exit;
 
 // ==================== DEFINICIONES ====================
-define('YGBMENU_VERSION', '1.2.4');
+define('YGBMENU_VERSION', '1.2.5');
 define('YGBMENU_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('YGBMENU_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('YGBMENU_PLUGIN_NAME', 'YGB Menu Store Selector');
+define('YGBMENU_SRI_HASH_JS', 'sha384-91983d28fbf536f8b3081745cfcceaae007d0e5cc4f3a379848d877c5fead5b20d22168ae1a60085854c107df315614e');
 
 // ==================== VERIFICACIÓN DE DEPENDENCIAS ====================
 
@@ -232,6 +233,19 @@ function ygbmenu_dynamic_css() {
 }
 add_action('wp_head', 'ygbmenu_dynamic_css', 999);
 add_action('astra_head', 'ygbmenu_dynamic_css', 999);
+
+/**
+ * Añadir Content Security Policy (CSP) para hardening de seguridad
+ */
+function ygbmenu_add_csp_header() {
+    if (!is_admin() && !is_customize_preview()) {
+        // CSP estricto que permite solo recursos del mismo origen y datos para SVG inline
+        $csp_policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' data:; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self'; form-action 'self';";
+        
+        header("Content-Security-Policy: {$csp_policy}");
+    }
+}
+add_action('send_headers', 'ygbmenu_add_csp_header');
 
 // ==================== ADMINISTRACIÓN ====================
 
@@ -540,8 +554,20 @@ add_action('admin_menu', 'ygbmenu_create_admin_menu', 20);
 
 function ygbmenu_store_selector_assets() {
     if (!is_admin() && !is_customize_preview()) {
+        // Cargar CSS con SRI para integridad de subrecursos
         wp_enqueue_style('ygbmenu-selector-css', YGBMENU_PLUGIN_URL . 'ygbmenu-selector.css', array(), YGBMENU_VERSION, 'all');
-        wp_enqueue_script('ygbmenu-selector-js', YGBMENU_PLUGIN_URL . 'ygbmenu-selector.js', array('jquery'), YGBMENU_VERSION, true);
+        
+        // Cargar JS con SRI para integridad de subrecursos
+        wp_enqueue_script(
+            'ygbmenu-selector-js', 
+            YGBMENU_PLUGIN_URL . 'ygbmenu-selector.js', 
+            array('jquery'), 
+            YGBMENU_VERSION, 
+            true
+        );
+        
+        // Añadir atributo de integridad SRI al script
+        add_filter('script_loader_tag', 'ygbmenu_add_sri_to_script', 10, 3);
         
         $cookie_domain = get_option('ygbmenu_cookie_domain', '');
         $site_domain = wp_parse_url(home_url(), PHP_URL_HOST);
@@ -560,6 +586,32 @@ function ygbmenu_store_selector_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'ygbmenu_store_selector_assets', 100);
+
+/**
+ * Añadir atributo de integridad SRI a los scripts del plugin
+ */
+function ygbmenu_add_sri_to_script($tag, $handle, $src) {
+    if ($handle === 'ygbmenu-selector-js') {
+        $sri_hash = defined('YGBMENU_SRI_HASH_JS') ? YGBMENU_SRI_HASH_JS : '';
+        if (!empty($sri_hash)) {
+            // Detectar el tipo de comillas usadas en el tag
+            if (strpos($tag, "src='") !== false) {
+                $tag = str_replace(
+                    " src='",
+                    " integrity='{$sri_hash}' crossorigin='anonymous' src='",
+                    $tag
+                );
+            } else {
+                $tag = str_replace(
+                    ' src="',
+                    " integrity=\"{$sri_hash}\" crossorigin=\"anonymous\" src=\"",
+                    $tag
+                );
+            }
+        }
+    }
+    return $tag;
+}
 
 // ==================== FUNCIONALIDAD FRONTEND ====================
 

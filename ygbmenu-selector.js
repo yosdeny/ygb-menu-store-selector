@@ -1,5 +1,5 @@
 // YGBMenu Store Selector - JavaScript compatible con Astra
-// Versión 1.2.4 - Correcciones de seguridad y mejoras
+// Versión 1.2.5 - Hardening avanzado: CSP, SRI y cookies seguras
 (function($) {
     'use strict';
     

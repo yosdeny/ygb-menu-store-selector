@@ -3,7 +3,7 @@ Contributors: YGB
 Tags: selector, dropdown, redirect, cookies, store selector, menu
 Requires at least: 7.0
 Tested up to: 7.1
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 Requires PHP: 8.0
 Tested PHP: 8.2
 License: GPLv2 or later
@@ -82,6 +82,14 @@ Ve al panel de administración del plugin (YGB Menu) y usa los selectores de col
 Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com` (con punto al inicio).
 
 == Changelog ==
+
+= 1.2.5 - 2025-XX-XX =
+* SEGURIDAD: Content Security Policy (CSP) implementado vía header HTTP
+* SEGURIDAD: Subresource Integrity (SRI) con hash SHA384 para archivos JavaScript
+* HARDENING: función ygbmenu_add_csp_header() añade cabeceras de seguridad estrictas
+* MEJORA: filtro script_loader_tag para inyectar atributos integrity y crossorigin
+* DOCUMENTACIÓN: actualizada versión a 1.2.5 en todos los archivos
+* ARQUITECTURA: defensa en profundidad (defense in depth) nivel empresarial
 
 = 1.2.4 - 2025-XX-XX =
 * SEGURIDAD: validación de dominio de cookie mejorada usando FILTER_VALIDATE_DOMAIN
