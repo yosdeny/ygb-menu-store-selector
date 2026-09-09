@@ -91,6 +91,7 @@ Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com`
 * MANTENIMIENTO: Versión estable con todas las funcionalidades operativas
 * CORRECCIÓN: Restaurada mecánica original de redirección mediante cookies
 * CORRECCIÓN: Eliminado código innecesario que afectaba la funcionalidad del menú
+* MEJORA: Declaración "Requires Plugins" añadida en el header para dependencia explícita
 
 = 1.2.4 - 2026-08-15 =
 * SEGURIDAD: validación de dominio de cookie mejorada usando FILTER_VALIDATE_DOMAIN
@@ -108,13 +109,6 @@ Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com`
 * ESCAPADO: en el widget se usa `wp_kses_post()` para `$args['before_widget']`, `after_widget`, `before_title` y `after_title` (hardening).
 * VERSIÓN: actualizada a 1.2.3 en todos los archivos.
 * CACHE: limpieza automática al desactivar el plugin.
-
-= 1.2.5 - 2026-09-08 =
-* ACTUALIZACIÓN: Requisitos mínimos de WordPress actualizados a 7.0+
-* ACTUALIZACIÓN: Compatibilidad probada hasta WordPress 7.1
-* ACTUALIZACIÓN: PHP probado hasta versión 8.2
-* MEJORA: Enlaces de autor y URI del plugin actualizados a GitHub
-* MANTENIMIENTO: Versión estable 1.2.5 con todas las funcionalidades operativas
 
 = 1.2.2 - 2025-07-25 =
 * SOLUCIÓN DEFINITIVA para compatibilidad con tema Astra
