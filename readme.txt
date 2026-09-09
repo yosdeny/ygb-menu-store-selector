@@ -31,7 +31,7 @@ YGBMenu Store Selector es un plugin de WordPress que proporciona un selector des
 
 **Compatibilidad probada:**
 * Tema Astra (gratis y pro)
-* WordPress 6.9+
+* WordPress 7.0+
 * PHP 8.0+
 
 == Instalación ==
@@ -84,12 +84,13 @@ Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com`
 == Changelog ==
 
 = 1.2.5 - 2026-09-08 =
-* SEGURIDAD: Content Security Policy (CSP) implementado vía header HTTP
-* SEGURIDAD: Subresource Integrity (SRI) con hash SHA384 para archivos JavaScript
-* HARDENING: función ygbmenu_add_csp_header() añade cabeceras de seguridad estrictas
-* MEJORA: filtro script_loader_tag para inyectar atributos integrity y crossorigin
-* DOCUMENTACIÓN: actualizada versión a 1.2.5 en todos los archivos
-* ARQUITECTURA: defensa en profundidad (defense in depth) nivel empresarial
+* ACTUALIZACIÓN: Requisitos mínimos de WordPress actualizados a 7.0+
+* ACTUALIZACIÓN: Compatibilidad probada hasta WordPress 7.1
+* ACTUALIZACIÓN: PHP probado hasta versión 8.2
+* MEJORA: Enlaces de autor y URI del plugin actualizados a GitHub
+* MANTENIMIENTO: Versión estable con todas las funcionalidades operativas
+* CORRECCIÓN: Restaurada mecánica original de redirección mediante cookies
+* CORRECCIÓN: Eliminado código innecesario que afectaba la funcionalidad del menú
 
 = 1.2.4 - 2026-08-15 =
 * SEGURIDAD: validación de dominio de cookie mejorada usando FILTER_VALIDATE_DOMAIN
@@ -107,6 +108,13 @@ Sí, configura el "Dominio de cookie" en la administración con `.tudominio.com`
 * ESCAPADO: en el widget se usa `wp_kses_post()` para `$args['before_widget']`, `after_widget`, `before_title` y `after_title` (hardening).
 * VERSIÓN: actualizada a 1.2.3 en todos los archivos.
 * CACHE: limpieza automática al desactivar el plugin.
+
+= 1.2.5 - 2026-09-08 =
+* ACTUALIZACIÓN: Requisitos mínimos de WordPress actualizados a 7.0+
+* ACTUALIZACIÓN: Compatibilidad probada hasta WordPress 7.1
+* ACTUALIZACIÓN: PHP probado hasta versión 8.2
+* MEJORA: Enlaces de autor y URI del plugin actualizados a GitHub
+* MANTENIMIENTO: Versión estable 1.2.5 con todas las funcionalidades operativas
 
 = 1.2.2 - 2025-07-25 =
 * SOLUCIÓN DEFINITIVA para compatibilidad con tema Astra
@@ -279,4 +287,4 @@ Compatibilidad con Astra implementada mediante CSS inline y hooks específicos.
 4. Actualizar versiones en todos los archivos simultáneamente
 5. Documentar cambios en este README
 6. Mantener las medidas de seguridad introducidas en v1.2.3
-7. Revisar compatibilidad con las nuevas versiones de WP (6.9+) y PHP (8.0+)
+7. Revisar compatibilidad con las nuevas versiones de WP (7.0+) y PHP (8.0+)
