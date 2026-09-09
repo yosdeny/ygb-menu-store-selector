@@ -8,6 +8,7 @@
  * Tested up to: 7.1
  * Requires PHP: 8.0
  * Tested PHP: 8.2
+ * Requires Plugins: ygb-store-selector/ygb-store-selector.php
  * Author: YGB
  * Author URI: https://github.com/yosdeny
  * License: GPLv2 or later
@@ -549,12 +550,22 @@ function ygbmenu_store_selector_assets() {
         
         $cookie_domain = get_option('ygbmenu_cookie_domain', '');
         $site_domain = wp_parse_url(home_url(), PHP_URL_HOST);
-        if (empty($site_domain)) $site_domain = $_SERVER['HTTP_HOST'] ?? '';
+        if (empty($site_domain)) {
+            $site_domain = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+        }
+        
+        // Normalizar dominio de cookie: asegurar que comienza con punto si se usa dominio personalizado
+        $effective_domain = '';
+        if (!empty($cookie_domain)) {
+            $effective_domain = $cookie_domain;
+        } else {
+            $effective_domain = $site_domain;
+        }
         
         wp_localize_script('ygbmenu-selector-js', 'ygbmenuConfig', array(
             'cookieDays'   => intval(get_option('ygbmenu_cookie_days', 30)),
             'cookieName'   => 'tiendaActual',
-            'cookieDomain' => !empty($cookie_domain) ? $cookie_domain : $site_domain,
+            'cookieDomain' => $effective_domain,
             'secure'       => is_ssl(),
             'i18n' => array(
                 'loading'     => __('Redirigiendo...', 'ygbmenu-store-selector'),
