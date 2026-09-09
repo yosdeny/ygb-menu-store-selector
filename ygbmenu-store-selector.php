@@ -694,6 +694,41 @@ function ygbmenu_register_widget() {
 }
 add_action('widgets_init', 'ygbmenu_register_widget');
 
+/**
+ * Agregar el selector al menú de navegación automáticamente
+ */
+function ygbmenu_add_to_nav_menu($items, $args) {
+    // Solo agregar en menús principales (puedes ajustar el location según tu tema)
+    $allowed_locations = array('primary', 'header-menu', 'main-menu', 'menu-1');
+    
+    if (!isset($args->theme_location) || !in_array($args->theme_location, $allowed_locations)) {
+        return $items;
+    }
+    
+    $tiendas = ygbmenu_get_stores_safe();
+    
+    if (empty($tiendas)) {
+        return $items;
+    }
+    
+    // Generar el HTML del selector
+    $selector_html = '<li class="menu-item ygbmenu-menu-item">';
+    $selector_html .= '<div class="ygbmenu-unique-container">';
+    $selector_html .= '<label for="ygbmenu-nav-select" class="screen-reader-text">' . __('Selecciona una tienda', 'ygbmenu-store-selector') . '</label>';
+    $selector_html .= '<select id="ygbmenu-nav-select" aria-label="' . __('Selecciona una tienda', 'ygbmenu-store-selector') . '" onchange="ygbmenuGuardarYRedirigir(this)" class="ygbmenu-unique-select">';
+    
+    foreach ($tiendas as $tienda) {
+        $selector_html .= '<option value="' . esc_url(rtrim($tienda['url'], '/')) . '">' . esc_html($tienda['nombre']) . '</option>';
+    }
+    
+    $selector_html .= '</select>';
+    $selector_html .= '</div>';
+    $selector_html .= '</li>';
+    
+    return $items . $selector_html;
+}
+add_filter('wp_nav_menu_items', 'ygbmenu_add_to_nav_menu', 10, 2);
+
 function ygbmenu_add_action_links($links) {
     $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=ygbmenu-selector')) . '">' . esc_html__('Configuración', 'ygbmenu-store-selector') . '</a>';
     array_unshift($links, $settings_link);
