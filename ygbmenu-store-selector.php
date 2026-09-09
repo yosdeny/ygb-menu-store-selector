@@ -651,7 +651,21 @@ function ygbmenu_add_action_links($links) {
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'ygbmenu_add_action_links');
 
 function ygbmenu_deactivate_cleanup() {
-    ygbmenu_clear_dynamic_css_cache();
+    // Limpieza segura usando la API de opciones de WordPress, NO wpdb directamente.
+    // Esto evita errores de "wpdb::prepare called incorrectly".
+    delete_transient('ygbmenu_dynamic_css');
+    wp_cache_delete('ygbmenu_dynamic_css', 'ygbmenu');
+    
+    // Opcional: Si deseas borrar las opciones al desactivar, descomenta las siguientes líneas:
+    // delete_option('ygbmenu_cookie_days');
+    // delete_option('ygbmenu_cookie_domain');
+    // delete_option('ygbmenu_color_primary');
+    // delete_option('ygbmenu_color_hover');
+    // delete_option('ygbmenu_color_text');
+    // delete_option('ygbmenu_color_background');
+    // delete_option('ygbmenu_color_border');
+    // delete_option('ygbmenu_color_spinner_primary');
+    // delete_option('ygbmenu_color_spinner_secondary');
 }
 register_deactivation_hook(__FILE__, 'ygbmenu_deactivate_cleanup');
 
