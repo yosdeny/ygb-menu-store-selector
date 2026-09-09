@@ -1,11 +1,7 @@
 // YGBMenu Store Selector - JavaScript compatible con Astra
-// Versión 1.2.5 - Hardening avanzado: CSP, SRI y cookies seguras
+// Versión 1.2.3 - Hardening: normalización segura de URL
 (function($) {
     'use strict';
-    
-    // ==================== CONSTANTES ====================
-    const YGBMENU_REDIRECT_DELAY = 300;
-    const YGBMENU_INIT_DELAY = 100;
     
     // ==================== FUNCIONES UTILES ====================
     
@@ -28,6 +24,7 @@
             
             // Validar formato básico antes de crear URL
             if (!url.match(/^https?:\/\/[a-z0-9.-]+/i)) {
+                console.warn('YGBMenu - URL con formato inválido:', url);
                 return '';
             }
             
@@ -40,6 +37,7 @@
         } catch (error) {
             // SEGURIDAD: nunca devolver la URL sin sanitizar
             // Esto previene redirecciones a javascript:... o data:...
+            console.warn('YGBMenu - URL inválida, redirección bloqueada:', url);
             return '';
         }
     }
@@ -70,7 +68,7 @@
                 try {
                     return decodeURIComponent(cookie.substring(nombre.length + 1));
                 } catch (e) {
-                    // Error silencioso en producción para evitar exposición de información
+                    console.warn('YGBMenu - Error decodificando cookie:', e);
                     return null;
                 }
             }
@@ -114,7 +112,7 @@
         // Redirigir después de breve pausa para mostrar feedback
         setTimeout(function() {
             window.location.href = urlNorm;
-        }, YGBMENU_REDIRECT_DELAY);
+        }, 300);
     };
     
     // ==================== FUNCIÓN PARA ELIMINAR OPCIÓN POR DEFECTO ====================
@@ -182,9 +180,9 @@
                 });
                 
             } catch (error) {
-                // Error silencioso en producción para evitar exposición de información
+                console.warn('YGBMenu - Error en inicialización:', error.message);
             }
-        }, YGBMENU_INIT_DELAY);
+        }, 100);
     });
     
 })(jQuery);
