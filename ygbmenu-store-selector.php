@@ -557,6 +557,9 @@ function ygbmenu_store_selector_assets() {
         // Cargar CSS con SRI para integridad de subrecursos
         wp_enqueue_style('ygbmenu-selector-css', YGBMENU_PLUGIN_URL . 'ygbmenu-selector.css', array(), YGBMENU_VERSION, 'all');
         
+        // Cargar jQuery primero (necesario para el funcionamiento del plugin)
+        wp_enqueue_script('jquery');
+        
         // Cargar JS con SRI para integridad de subrecursos
         wp_enqueue_script(
             'ygbmenu-selector-js', 
