@@ -1,1 +1,1 @@
-Nothing should be ignored based on the provided file changes, as they only include source files (.js and .php) without any build artifacts, dependencies, or temporary files.
+Nothing should be ignored based on the provided file changes. The modified files ('readme.txt' and 'ygbmenu-store-selector.php') are source/config files and should not be added to .gitignore.
