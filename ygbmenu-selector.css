@@ -1,6 +1,6 @@
 /* === YGBMENU SELECTOR - VERSIÓN CON ICONO DENTRO === */
 
-/* Contenedor principal - AHORA SIN FLEX */
+/* Contenedor principal */
 .ygbmenu-unique-container {
     margin: 0 !important;
     padding: 0 !important;
@@ -13,8 +13,7 @@
 .ygbmenu-unique-select {
     font-size: 16px !important;
     line-height: 1.4 !important;
-    padding: 2px 40px 2px 35px !important;
-    width: 100% !important;
+    padding: 2px 16px 2px 22px !important;
     color: #E26143 !important;
     border: 2px solid #E26143 !important;
     border-radius: 8px !important;
@@ -22,11 +21,11 @@
     appearance: none !important;
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
-    
-    background-position: left 10px center, right 10px center !important;
-    background-size: 16px, 20px !important;
+
+    background-position: left 2px center, right 2px center !important;
+    background-size: 16px, 12px !important;
     background-repeat: no-repeat, no-repeat !important;
-    
+
     transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
     cursor: pointer !important;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif !important;
@@ -34,6 +33,8 @@
     height: auto !important;
     min-height: 40px !important;
     vertical-align: middle !important;
+    text-align: left !important;
+    max-width: 100% !important;
 }
 
 /* Estados */
@@ -59,10 +60,10 @@
 @media (max-width: 480px) {
     .ygbmenu-unique-select {
         font-size: 14px !important;
-        padding: 2px 40px 2px 32px !important;
+        padding: 2px 14px 2px 20px !important;
         min-height: 36px !important;
-        background-position: left 8px center, right 8px center !important;
-        background-size: 14px, 18px !important;
+        background-position: left 2px center, right 2px center !important;
+        background-size: 14px, 10px !important;
     }
 }
 
@@ -76,9 +77,21 @@
     outline: none !important;
 }
 
-/* Correcciones específicas para Astra */
+/* Correcciones específicas para Astra en desktop */
 .ast-container .ygbmenu-unique-container,
 .ast-page-builder-template .ygbmenu-unique-container,
 .ast-separate-container .ygbmenu-unique-container {
     margin: 15px 0 !important;
+}
+
+/* Astra: contener el bloque en móvil */
+@media (max-width: 768px) {
+    .ygbmenu-with-logo {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+    }
+    .ygbmenu-with-logo .ygbmenu-unique-select {
+        max-width: 100% !important;
+    }
 }

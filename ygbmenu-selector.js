@@ -1,188 +1,231 @@
 // YGBMenu Store Selector - JavaScript compatible con Astra
-// Versión 1.2.3 - Hardening: normalización segura de URL
-(function($) {
+// Versión 1.5.2 - Ancho del select ajustado al texto de la opción seleccionada
+(function ($) {
     'use strict';
-    
-    // ==================== FUNCIONES UTILES ====================
-    
-    /**
-     * Normalizar URL de forma segura
-     * @param {string} url - URL a normalizar
-     * @returns {string} URL normalizada o cadena vacía si es inválida
-     */
+
+    var CONFIG = window.ygbmenuConfig || {};
+
+    // ==================== UTILIDADES ====================
+
     function normalizarUrl(url) {
-        if (!url || typeof url !== 'string') return '';
-        
+        if (!url || typeof url !== 'string') {
+            return '';
+        }
+
+        url = url.trim();
+
+        if (!/^https?:\/\//i.test(url) && !/^\/\//.test(url)) {
+            url = 'https://' + url;
+        }
+
+        if (!/^https?:\/\/[a-z0-9.-]+/i.test(url)) {
+            return '';
+        }
+
         try {
-            // Limpiar y validar URL
-            url = url.trim();
-            
-            // Añadir protocolo si no tiene
-            if (!url.match(/^https?:\/\//) && !url.match(/^\/\//)) {
-                url = 'https://' + url;
-            }
-            
-            // Validar formato básico antes de crear URL
-            if (!url.match(/^https?:\/\/[a-z0-9.-]+/i)) {
-                console.warn('YGBMenu - URL con formato inválido:', url);
-                return '';
-            }
-            
-            const urlObj = new URL(url);
-            let path = urlObj.pathname.replace(/\/+$/, '');
-            if (!path) path = '/';
-            
-            // Retornar URL normalizada
+            var urlObj = new URL(url);
+            var path = urlObj.pathname.replace(/\/+$/, '') || '/';
             return urlObj.origin + path + urlObj.search + urlObj.hash;
-        } catch (error) {
-            // SEGURIDAD: nunca devolver la URL sin sanitizar
-            // Esto previene redirecciones a javascript:... o data:...
-            console.warn('YGBMenu - URL inválida, redirección bloqueada:', url);
+        } catch (e) {
             return '';
         }
     }
-    
-    /**
-     * Escribir cookie con opciones de seguridad mejoradas
-     */
+
     function escribirCookie(nombre, valor) {
-        const config = window.ygbmenuConfig || {};
-        const dias = config.cookieDays || 30;
-        const maxAge = dias * 24 * 60 * 60;
-        const dominio = config.cookieDomain ? `; domain=${config.cookieDomain}` : '';
-        const secure = config.secure ? '; Secure' : '';
-        
-        // Establecer cookie con flags de seguridad
-        document.cookie = `${nombre}=${encodeURIComponent(valor)}; path=/; max-age=${maxAge}; SameSite=Lax${dominio}${secure}`;
+        var dias = CONFIG.cookieDays || 30;
+        var maxAge = dias * 24 * 60 * 60;
+        var dominio = CONFIG.cookieDomain ? '; domain=' + CONFIG.cookieDomain : '';
+        var secure = CONFIG.secure ? '; Secure' : '';
+
+        document.cookie = nombre + '=' + encodeURIComponent(valor)
+            + '; path=/; max-age=' + maxAge
+            + '; SameSite=Lax'
+            + dominio
+            + secure;
     }
-    
-    /**
-     * Obtener cookie de forma segura
-     */
+
     function obtenerCookie(nombre) {
-        if (!document.cookie) return null;
-        
-        const cookies = document.cookie.split('; ');
-        for (let cookie of cookies) {
-            if (cookie.indexOf(nombre + '=') === 0) {
+        if (!document.cookie) {
+            return null;
+        }
+
+        var prefijo = nombre + '=';
+        var partes = document.cookie.split('; ');
+
+        for (var i = 0; i < partes.length; i++) {
+            if (partes[i].indexOf(prefijo) === 0) {
                 try {
-                    return decodeURIComponent(cookie.substring(nombre.length + 1));
+                    return decodeURIComponent(partes[i].substring(prefijo.length));
                 } catch (e) {
-                    console.warn('YGBMenu - Error decodificando cookie:', e);
                     return null;
                 }
             }
         }
+
         return null;
     }
-    
-    // ==================== FUNCIÓN PRINCIPAL ====================
-    
-    window.ygbmenuGuardarYRedirigir = function(select) {
-        const url = select.value;
-        if (!url) return;
-        
-        const urlNorm = normalizarUrl(url);
-        if (!urlNorm || !urlNorm.startsWith('http')) {
-            const mensaje = window.ygbmenuConfig?.i18n?.invalid_url || 'URL no válida';
-            if (typeof alert === 'function') {
-                alert(mensaje);
+
+    // ==================== LÓGICA PRINCIPAL ====================
+
+    function guardarYRedirigir(select) {
+        var url = select.value;
+        if (!url) {
+            return;
+        }
+
+        var urlNorm = normalizarUrl(url);
+        if (!urlNorm || urlNorm.indexOf('http') !== 0) {
+            var mensaje = (CONFIG.i18n && CONFIG.i18n.invalid_url) || 'URL no válida';
+            if (typeof window.alert === 'function') {
+                window.alert(mensaje);
             }
-            // Restaurar selección previa (sin recargar)
             select.value = select.dataset.previousValue || '';
             return;
         }
-        
-        // Guardar valor anterior para restauración en caso de error
+
         select.dataset.previousValue = select.value;
-        
-        // Mostrar estado de carga
-        const originalText = select.options[select.selectedIndex].text;
         select.disabled = true;
         select.classList.add('loading-state');
-        
-        const config = window.ygbmenuConfig || {};
-        const loadingText = config.i18n?.loading || 'Redirigiendo...';
-        select.options[select.selectedIndex].text = loadingText;
-        
-        // Guardar cookie y redirigir
-        const cookieName = config.cookieName || 'tiendaActual';
-        escribirCookie(cookieName, urlNorm);
-        
-        // Redirigir después de breve pausa para mostrar feedback
-        setTimeout(function() {
+
+        var opt = select.options[select.selectedIndex];
+        if (opt) {
+            opt.text = (CONFIG.i18n && CONFIG.i18n.loading) || 'Redirigiendo...';
+        }
+
+        escribirCookie(CONFIG.cookieName || 'tiendaActual', urlNorm);
+
+        window.setTimeout(function () {
             window.location.href = urlNorm;
         }, 300);
-    };
-    
-    // ==================== FUNCIÓN PARA ELIMINAR OPCIÓN POR DEFECTO ====================
-    
-    function removeDefaultOption() {
-        $('.ygbmenu-unique-select option[value=""]').each(function() {
-            const $option = $(this);
-            const optionText = $option.text().toLowerCase();
-            
-            // Eliminar si es la opción por defecto (multilenguaje)
-            if (optionText.includes('elige una opción') || 
-                optionText.includes('selecciona') || 
-                optionText.includes('choose') || 
-                optionText.includes('select') ||
-                optionText.includes('seleccionar')) {
-                $option.remove();
+    }
+
+    function removeDefaultOption($scope) {
+        $scope.find('select[data-ygbmenu-selector] option[value=""]').remove();
+    }
+
+    function inicializarSelectores($scope) {
+        $scope.find('select[data-ygbmenu-selector]').each(function () {
+            var select = this;
+            var urlActual = normalizarUrl(window.location.origin);
+            var cookieName = CONFIG.cookieName || 'tiendaActual';
+            var tiendaActual = obtenerCookie(cookieName);
+
+            if (!tiendaActual || normalizarUrl(tiendaActual) !== urlActual) {
+                escribirCookie(cookieName, urlActual);
+                tiendaActual = urlActual;
+            }
+
+            var opciones = Array.prototype.slice.call(select.options);
+            var opcion = opciones.filter(function (opt) {
+                return normalizarUrl(opt.value) === normalizarUrl(tiendaActual);
+            })[0];
+
+            if (opcion) {
+                select.value = opcion.value;
+                select.dataset.previousValue = opcion.value;
             }
         });
     }
-    
-    // ==================== INICIALIZACIÓN CON MEJOR MANEJO DE ERRORES ====================
-    
-    $(document).ready(function() {
-        // Esperar a que Astra cargue completamente
-        setTimeout(function() {
-            try {
-                // ELIMINAR OPCIÓN POR DEFECTO
-                removeDefaultOption();
-                
-                // INICIALIZAR SELECTORES
-                $('.ygbmenu-unique-select').each(function() {
-                    const select = this;
-                    const urlActual = normalizarUrl(window.location.origin);
-                    const config = window.ygbmenuConfig || {};
-                    const cookieName = config.cookieName || 'tiendaActual';
-                    
-                    let tiendaActual = obtenerCookie(cookieName);
-                    
-                    // Si no hay cookie o no coincide, crear una
-                    if (!tiendaActual || normalizarUrl(tiendaActual) !== urlActual) {
-                        escribirCookie(cookieName, urlActual);
-                        tiendaActual = urlActual;
-                    }
-                    
-                    // Seleccionar la opción correspondiente
-                    if (tiendaActual) {
-                        const opciones = Array.from(select.options);
-                        const opcion = opciones.find(function(opt) {
-                            return normalizarUrl(opt.value) === normalizarUrl(tiendaActual);
-                        });
-                        
-                        if (opcion) {
-                            select.value = opcion.value;
-                            select.dataset.previousValue = opcion.value;
-                        }
-                    }
-                });
-                
-                // SOPORTE PARA TECLADO (accesibilidad)
-                $('.ygbmenu-unique-select').on('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        ygbmenuGuardarYRedirigir(this);
-                        e.preventDefault();
-                    }
-                });
-                
-            } catch (error) {
-                console.warn('YGBMenu - Error en inicialización:', error.message);
+
+    // ==================== ANCHO ADAPTATIVO ====================
+
+    function ajustarAnchoSelects($scope) {
+        $scope.find('select[data-ygbmenu-selector]').each(function () {
+            var select = this;
+            var $select = $(select);
+            var cs = window.getComputedStyle(select);
+
+            var $medidor = $('<span>')
+                .css({
+                    position: 'absolute',
+                    visibility: 'hidden',
+                    whiteSpace: 'nowrap',
+                    left: '-9999px',
+                    top: '-9999px',
+                    fontSize: cs.fontSize,
+                    fontWeight: cs.fontWeight,
+                    fontFamily: cs.fontFamily,
+                    letterSpacing: cs.letterSpacing,
+                    textTransform: cs.textTransform,
+                    padding: 0,
+                    margin: 0,
+                    border: 0
+                })
+                .appendTo(document.body);
+
+            // 1) Ancho del texto más largo entre todas las opciones.
+            var anchoMax = 0;
+            $select.find('option').each(function () {
+                $medidor.text($(this).text());
+                var ancho = $medidor[0].getBoundingClientRect().width;
+                if (ancho > anchoMax) {
+                    anchoMax = ancho;
+                }
+            });
+
+            // 2) Ancho del texto de la opción seleccionada actualmente.
+            var textoActual = '';
+            if (select.selectedIndex >= 0 && select.options[select.selectedIndex]) {
+                textoActual = select.options[select.selectedIndex].text;
             }
+            $medidor.text(textoActual);
+            var anchoActual = $medidor[0].getBoundingClientRect().width;
+
+            $medidor.remove();
+
+            var paddingLeft  = parseFloat(cs.paddingLeft) || 0;
+            var paddingRight = parseFloat(cs.paddingRight) || 0;
+            var borderLeft   = parseFloat(cs.borderLeftWidth) || 0;
+            var borderRight  = parseFloat(cs.borderRightWidth) || 0;
+
+            // Ancho del contenedor (para el logo): usa el texto más largo.
+            var anchoContenedor = Math.ceil(anchoMax + paddingLeft + paddingRight + borderLeft + borderRight) + 2;
+
+            // Ancho del select: usa el texto actual.
+            var anchoSelect = Math.ceil(anchoActual + paddingLeft + paddingRight + borderLeft + borderRight) + 2;
+
+            // Nunca mayor que el contenedor.
+            if (anchoSelect > anchoContenedor) {
+                anchoSelect = anchoContenedor;
+            }
+
+            // Escribe el ancho del contenedor en la variable CSS.
+            var container = select.closest('.ygbmenu-with-logo') || select.closest('.ygbmenu-unique-container') || select.parentElement;
+            if (container) {
+                container.style.setProperty('--ygbmenu-select-w', anchoContenedor + 'px');
+            }
+
+            // Aplica el ancho del select inline.
+            select.style.setProperty('width', anchoSelect + 'px', 'important');
+            select.style.setProperty('max-width', '100%', 'important');
+        });
+    }
+
+    // ==================== INICIALIZACIÓN ====================
+
+    $(function () {
+        window.setTimeout(function () {
+            var $scope = $(document);
+
+            removeDefaultOption($scope);
+            inicializarSelectores($scope);
+            ajustarAnchoSelects($scope);
+
+            $scope.on('change.ygbmenu', 'select[data-ygbmenu-selector]', function () {
+                guardarYRedirigir(this);
+            });
+
+            $scope.on('keydown.ygbmenu', 'select[data-ygbmenu-selector]', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    guardarYRedirigir(this);
+                }
+            });
+
+            $(window).on('resize.ygbmenu', function () {
+                ajustarAnchoSelects($scope);
+            });
         }, 100);
     });
-    
+
 })(jQuery);
